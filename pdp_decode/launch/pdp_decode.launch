@@ -1,0 +1,7 @@
+<launch>
+    <rosparam file="$(find rover)/config/can_config.yaml"/>
+    <rosparam file="$(find rover)/config/topics_config.yaml"/>
+    <arg name="respawn" default="false" />    
+    <node pkg="safety" type="pdp_decode_node" name="pdp_decode" respawn="$(arg respawn)" output="screen">
+    </node>
+</launch>
