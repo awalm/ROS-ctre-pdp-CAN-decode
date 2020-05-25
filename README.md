@@ -1,4 +1,4 @@
-# ROS PDP Decode
+# ROS CTRE Power Distribution Panel CAN Decode & Control
 
 A ROS node to decode the CAN frames from the CTRE Power Distribution Panel. 
 
