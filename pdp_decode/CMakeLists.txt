@@ -11,6 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
  roscpp  
  can_msgs
  pdp_msgs
+ message_generation
+ std_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -68,10 +70,11 @@ find_package(Boost REQUIRED COMPONENTS system)
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   can_msgs
-# )
+ generate_messages(
+   DEPENDENCIES
+   can_msgs
+   std_msgs
+ )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
