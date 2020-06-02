@@ -3,11 +3,6 @@
 pdp_decode_current: "/safety/current"
 pdp_decode_energy: "/safety/energy"
 
-#Interface
-can_device: "can0"
-can_topic_rx: "/can/recv"
-can_topic_tx: "/can/transmit"
-
 #List of CAN devices and their associated topics
 #Essentially a dictionary.
 #As we are using a lot of FRC devices, we will split them up by using the FRC address format. Devices
@@ -16,4 +11,8 @@ can_topic_tx: "/can/transmit"
 #Please see the documentation for more detail
 
 #If you are wondering why the ID is a string and not an integer, it's because ROS maps only supports strings as keys :> 
-can_device_types: {"0x804": "pdp"}
+#CAN Device types
+#Uncomment this if running pdp_decode standalone
+#can_device_types: {"0x804": "pdp"}
+
+

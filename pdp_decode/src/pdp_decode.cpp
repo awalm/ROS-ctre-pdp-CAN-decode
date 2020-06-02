@@ -203,14 +203,10 @@ int main(int argc, char **argv)
             }
         }
     } else {
-        ROS_WARN("CAN Device type data not found.");
-        return 1;
+        ROS_WARN("CAN Device type data not found. Transmitting to /pdp");
+        pdp_topic = "pdp";
     }
 
-  if (pdp_topic.empty()) {
-      ROS_WARN("Unable to find PDP raw CAN frames topic.");;
-      return 1;
-  }
   std::string can_rx_topic;
   std::string pdp_rx_topic;
   if (ros::param::get("/can_topic_rx", can_rx_topic)) {

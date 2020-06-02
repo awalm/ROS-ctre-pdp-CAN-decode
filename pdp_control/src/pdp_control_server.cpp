@@ -28,13 +28,38 @@
 
 #include "ros/ros.h"
 #include <pdp_control/PdpControl.h>
+#include <can_msgs/Frame.h>
+#include "can_api/CANAPI.hpp"
 
+uint8_t api_id = 0x70;
+ros::Publisher pdp_pub; 
 
 void clear_pdp_faults() {
+  can_msgs::Frame msg;
+  // std::cout << "BEFORE ID" << msg.id << "\n";
+  // std::cout << "DATA SIZE " << unsigned(msg.dlc) << "\n";
+  // std::cout << "DATA[0] " << unsigned(msg.data[0]) << "\n";
+  std::vector<uint8_t> data = {0x80};
+  CANAPI::data_to_can(&msg, api_id, data);
+  // std::cout << "AFTER ID" << msg.id << "\n";
+  // std::cout << "DATA SIZE " << unsigned(msg.dlc) << "\n";
+  // std::cout << "DATA[0]: " << unsigned(msg.data[0]) << "\n";
+  pdp_pub.publish(msg);
   //Do stuff
 }
 
 void reset_pdp_energy() {
+  //Do stuff
+    can_msgs::Frame msg;
+  // std::cout << "BEFORE ID" << msg.id << "\n";
+  // std::cout << "DATA SIZE " << unsigned(msg.dlc) << "\n";
+  // std::cout << "DATA[0] " << unsigned(msg.data[0]) << "\n";
+  std::vector<uint8_t> data = {0x40};
+  CANAPI::data_to_can(&msg, api_id, data);
+  // std::cout << "AFTER ID" << msg.id << "\n";
+  // std::cout << "DATA SIZE " << unsigned(msg.dlc) << "\n";
+  // std::cout << "DATA[0]: " << unsigned(msg.data[0]) << "\n";
+  pdp_pub.publish(msg);
   //Do stuff
 }
 bool send_msg(pdp_control::PdpControl::Request  &req,
@@ -57,8 +82,15 @@ int main(int argc, char **argv)
 {
   ros::init(argc, argv, "PDPControlServer");
   ros::NodeHandle nh;
+   //Change for modularity
+  ros::ServiceServer service = nh.advertiseService("/rover/pdp_control", send_msg);
+  std::string topic_tx; 
+  if (!ros::param::get("/can_topic_tx", topic_tx)) {
+   	ROS_WARN("CAN Topic Transmit name not found, raw CAN data will be sent from topic: sent_messages");
+    topic_tx = "sent_messages";
+  }
 
-  ros::ServiceServer service = nh.advertiseService("pdp_control", send_msg);
+  pdp_pub = nh.advertise<can_msgs::Frame>(topic_tx, 10);
   ROS_INFO("Ready to send PDP Control data");
   ros::spin();
 

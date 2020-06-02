@@ -12,7 +12,10 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   message_generation
   std_msgs
+  can_api
 )
+
+include_directories(include ${can_api_INCLUDE_DIRS})
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -104,9 +107,9 @@ add_service_files(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
+  INCLUDE_DIRS include 
 #  LIBRARIES pdp_control
-#  CATKIN_DEPENDS can_msgs roscpp
+  CATKIN_DEPENDS can_msgs roscpp can_api
 #  DEPENDS system_lib
 )
 
@@ -119,6 +122,7 @@ catkin_package(
 include_directories(
  include
   ${catkin_INCLUDE_DIRS}
+  ${can_api_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -136,6 +140,8 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME}_server src/pdp_control_server.cpp)
 target_link_libraries(${PROJECT_NAME}_server ${catkin_LIBRARIES})
+#target_link_libraries(can_api ${catkin_LIBRARIES})
+
 add_dependencies(${PROJECT_NAME}_server ${catkin_EXPORTED_TARGETS})
 #add_dependencies(your_library ${catkin_EXPORTED_TARGETS})
 add_dependencies(${PROJECT_NAME}_server ${PROJECT_NAME}_generate_messages_cpp)
@@ -152,9 +158,9 @@ add_dependencies(${PROJECT_NAME}_server ${PROJECT_NAME}_generate_messages_cpp)
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(${PROJECT_NAME}_node
-#   ${catkin_LIBRARIES}
-# )
+ target_link_libraries(${PROJECT_NAME}_server
+   ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##
@@ -185,11 +191,11 @@ add_dependencies(${PROJECT_NAME}_server ${PROJECT_NAME}_generate_messages_cpp)
 # )
 
 ## Mark cpp header files for installation
-# install(DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
-# )
+ install(DIRECTORY include/${PROJECT_NAME}/
+   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+   FILES_MATCHING PATTERN "*.h"
+   PATTERN ".svn" EXCLUDE
+ )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
