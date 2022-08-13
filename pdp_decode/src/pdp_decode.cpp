@@ -39,6 +39,7 @@ https://github.com/wpilibsuite/allwpilib/blob/master/hal/src/main/native/athena/
 #include "pdp_frames.hpp"
 #include <pdp_msgs/pdp_data.h>
 
+#define PDP_DECODE_LOOP_RATE_HZ (10)
 
 const std::string pdp_can_id = "0x804";
 
@@ -74,6 +75,9 @@ can_msgs::Frame pdp_frames[9];
 
 struct flags status; 
 
+//Run loop at 10Hz
+ros::Rate loop_rate(PDP_DECODE_LOOP_RATE_HZ);
+
 void msg_cb(const can_msgs::Frame& f)
 {
   if (status.decoding) {
@@ -88,7 +92,6 @@ void msg_cb(const can_msgs::Frame& f)
   auto row = api_id_map.find(api_id);
   if (!(row == api_id_map.end())) {
     //If it exists within the map, then add it to the array, and set the corresponding flag
-        
         pdp_frames[row->second] = f;
         status.avail_frame |= row->second;
         // std::cout << "CURR FRAME DECODED:" << row -> second << "\n";
@@ -227,8 +230,6 @@ int main(int argc, char **argv)
 
   ros::Publisher pdp_pub = nh.advertise<pdp_msgs::pdp_data>("/rover/power_data", 10);
   //Second pub for temp?
-
-
   while (ros::ok) {
     ros::spinOnce();
     if (status.avail_frame == 0xF) {
@@ -246,7 +247,7 @@ int main(int argc, char **argv)
         //std::cout << "CLEARING FLAGS\n";
         status.avail_frame = 0;
         status.decoding = false;
-        ros::Duration(0.5).sleep();
+        loop_rate.sleep();
     }
   }
 
