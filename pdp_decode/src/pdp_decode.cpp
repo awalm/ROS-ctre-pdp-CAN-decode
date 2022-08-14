@@ -216,7 +216,7 @@ int main(int argc, char **argv)
   }
   std::string can_rx_topic;
   std::string pdp_rx_topic;
-  if (ros::param::get("/can_topic_rx", can_rx_topic)) {
+  if (ros::param::get("/can_device", can_rx_topic)) {
        pdp_rx_topic= can_rx_topic + "/" + pdp_topic;
       //std::cout << pdp_rx_topic << "\n";
       
@@ -224,7 +224,7 @@ int main(int argc, char **argv)
       ROS_WARN("Unable to find raw CAN Receive Topic during PDP decode");
       return 1;
   }
-  ros::Subscriber sub = nh.subscribe(pdp_rx_topic, 4, msg_cb);
+  ros::Subscriber sub = nh.subscribe(pdp_rx_topic, 5, msg_cb);
 
   //TODO: replace with value from parameter server
 
