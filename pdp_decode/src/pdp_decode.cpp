@@ -75,9 +75,6 @@ can_msgs::Frame pdp_frames[9];
 
 struct flags status; 
 
-//Run loop at 10Hz
-ros::Rate loop_rate(PDP_DECODE_LOOP_RATE_HZ);
-
 void msg_cb(const can_msgs::Frame& f)
 {
   if (status.decoding) {
