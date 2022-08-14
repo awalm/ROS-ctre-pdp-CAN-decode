@@ -77,7 +77,6 @@ struct flags status;
 
 //Run loop at 10Hz
 ros::Rate loop_rate(PDP_DECODE_LOOP_RATE_HZ);
-ros::NodeHandle nh;
 
 void msg_cb(const can_msgs::Frame& f)
 {
@@ -193,6 +192,10 @@ void decode(pdp_msgs::pdp_data *msg) {
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "pdp_decode");
+
+    ros::NodeHandle nh;
+
+    ros::Rate loop_rate(PDP_DECODE_LOOP_RATE_HZ);
 
     //Find the publisher by using CAN device parameters.
    

@@ -1,7 +1,6 @@
 <launch>
-    <rosparam file="$(find rover)/config/can_config.yaml"/>
-    <rosparam file="$(find rover)/config/topics_config.yaml"/>
+    <rosparam file="$(find pdp_decode)/config/pdp_config.yaml"/>
     <arg name="respawn" default="false" />    
-    <node pkg="pdp_decode" type="pdp_decode_node" name="pdp_decode" respawn="$(arg respawn)" output="screen">
+    <node pkg="pdp_decode" type="pdp_decode_node" name="pdp_decode" respawn="false" output="screen">
     </node>
 </launch>
